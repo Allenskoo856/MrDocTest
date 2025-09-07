@@ -15,6 +15,7 @@ class RequiredLoginMiddleware():
         # 设置排除URL
         compile_tuple = (
             r'/login(.*)$', # 登录
+            r'/ldap_login(.*)$', # LDAP登录
             r'/logout(.*)$', # 注销
             r'/register(.*)$', # 注册
             r'/check_code(.*)$', # 验证码

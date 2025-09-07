@@ -241,6 +241,97 @@ def log_out(request):
         return JsonResponse({'status':False})
 
 
+# LDAP登录视图
+@logger.catch()
+def ldap_login(request):
+    """LDAP登录视图函数"""
+    from app_admin.ldap_backend import LDAPBackend
+    from configparser import ConfigParser
+    import os
+    
+    # 读取LDAP配置
+    config = ConfigParser()
+    config_path = os.path.join(request.META.get('DJANGO_SETTINGS_MODULE', ''), '../../config/config.ini')
+    config_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'config', 'config.ini')
+    config.read(config_path, encoding='utf-8')
+    
+    # 检查LDAP是否启用
+    enable_ldap = config.getboolean('ldap', 'enable_ldap', fallback=False)
+    if not enable_ldap:
+        errormsg = _('LDAP认证未启用，请联系管理员！')
+        return render(request, 'ldap_login.html', locals())
+    
+    to = request.GET.get('next', '/')
+    safe_to = is_internal_path(to)
+    if safe_to is False:
+        to = '/'
+        
+    if request.method == 'GET':
+        # 登录用户访问登录页面自动跳转到首页
+        if request.user.is_authenticated:
+            return redirect(to)
+        else:
+            return render(request, 'ldap_login.html', locals())
+            
+    elif request.method == 'POST':
+        try:
+            username = request.POST.get('username', '')
+            password = request.POST.get('password', '')
+            
+            if not username or not password:
+                errormsg = _('用户名或密码未输入！')
+                return render(request, 'ldap_login.html', locals())
+                
+            # 验证登录次数（防止暴力破解）
+            if 'LDAPLoginLock' not in request.session.keys():
+                request.session['LDAPLoginNum'] = 1
+                request.session['LDAPLoginLock'] = False
+                request.session['LDAPLoginTime'] = datetime.datetime.now().timestamp()
+                
+            verify_num = request.session['LDAPLoginNum']
+            if verify_num > 5:
+                request.session['LDAPLoginLock'] = True
+                request.session['LDAPLoginTime'] = (datetime.datetime.now() + datetime.timedelta(minutes=10)).timestamp()
+                
+            verify_lock = request.session['LDAPLoginLock']
+            verify_time = request.session['LDAPLoginTime']
+            
+            if verify_lock is True and datetime.datetime.now().timestamp() < verify_time:
+                errormsg = _("操作过于频繁，请10分钟后再试！")
+                request.session['LDAPLoginNum'] = 0
+                return render(request, 'ldap_login.html', locals())
+            
+            # 使用LDAP后端进行认证
+            ldap_backend = LDAPBackend()
+            user = ldap_backend.authenticate(request, username=username, password=password)
+            
+            if user is None:
+                errormsg = _('LDAP用户名或密码错误！')
+                request.session['LDAPLoginNum'] += 1
+                return render(request, 'ldap_login.html', locals())
+                
+            if user.is_active:
+                # 使用Django的login函数登录用户
+                from django.contrib.auth import login
+                login(request, user, backend='app_admin.ldap_backend.LDAPBackend')
+                
+                # 重置登录计数器
+                request.session['LDAPLoginNum'] = 0
+                request.session['LDAPLoginLock'] = False
+                request.session['LDAPLoginTime'] = datetime.datetime.now().timestamp()
+                
+                logger.info(f"LDAP用户 {username} 登录成功")
+                return redirect(to)
+            else:
+                errormsg = _('用户被禁用！')
+                return render(request, 'ldap_login.html', locals())
+                
+        except Exception as e:
+            logger.exception("LDAP登录异常")
+            errormsg = _('LDAP登录失败，请检查配置或联系管理员！')
+            return render(request, 'ldap_login.html', locals())
+
+
 # 忘记密码
 def forget_pwd(request):
     if request.method == 'GET':

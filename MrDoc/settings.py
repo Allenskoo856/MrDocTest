@@ -181,6 +181,12 @@ CACHES = {
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
+# 认证后端配置
+AUTHENTICATION_BACKENDS = [
+    'app_admin.ldap_backend.LDAPBackend',  # LDAP认证后端
+    'django.contrib.auth.backends.ModelBackend',  # 默认认证后端
+]
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -241,8 +247,9 @@ else:
     STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
 # 媒体文件
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_URL = CONFIG.get('media', 'media_url', fallback='/media/')
+MEDIA_ROOT_RELATIVE = CONFIG.get('media', 'media_root', fallback='media')
+MEDIA_ROOT = os.path.join(BASE_DIR, MEDIA_ROOT_RELATIVE)
 if os.path.exists(MEDIA_ROOT) is False:
     os.mkdir(MEDIA_ROOT)
 

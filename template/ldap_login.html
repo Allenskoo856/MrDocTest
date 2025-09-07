@@ -9,7 +9,7 @@
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     <meta http-equiv="Cache-Control" content="max-age=7200" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<title>{% trans "用户登录" %} - {% if site_name != None %}{{site_name}} {% else %}{% trans "觅思文档" %}{% endif %}</title>
+	<title>LDAP登录 - {% if site_name != None %}{{site_name}} {% else %}{% trans "觅思文档" %}{% endif %}</title>
 	<meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 	<link rel="stylesheet" href="{% static 'layui/css/layui.css' %}" crossorigin="anonymous">
@@ -39,6 +39,9 @@
         button.layui-btn-normal{
             background-color: #2176ff !important;
         }
+        button.layui-btn-warm{
+            background-color: #FF5722 !important;
+        }
         /* 移动端输入框样式 */
         @media screen and (max-width: 450px){
             .layui-form-item .layui-input-inline {
@@ -63,51 +66,29 @@
                 {% csrf_token %}
                 <div class="layui-form-item">
                     <img src="{% static 'mrdoc_logo_ridus.png' %}" style="width: 60px;height: 60px;margin-bottom: 10px;" />
-                    <h3><strong>{% trans "登录" %} - <a href="/">{% if site_name != None %}{{site_name}} {% else %}{% trans "觅思文档" %}{% endif %}</a></strong></h3>
+                    <h3><strong>LDAP登录 - <a href="/">{% if site_name != None %}{{site_name}} {% else %}{% trans "觅思文档" %}{% endif %}</a></strong></h3>
                 </div>
                 <span style='color:red;margin-bottom: 10px;'>{{ errormsg }}</span>
                 <div class="layui-form-item">
                     <div class="layui-input-inline login-input">
-                      <input type="text" name="username" required  lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input" value="{{username}}">
+                      <input type="text" name="username" required  lay-verify="required" placeholder="请输入LDAP用户名" autocomplete="off" class="layui-input" value="{{username}}">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-input-inline login-input">
-                      <input type="password" name="password" required  lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input" value="{{pwd}}">
-                    </div>
-                </div>
-                {% if enable_login_check_code == 'on' %}
-                <div class="layui-form-item">
-                    <div class="layui-input-inline">
-                        <input type="text" class="layui-input" placeholder="请输入验证码" name="check_code" autocomplete="off">
-                            <img src="{% url 'check_code' %}" onclick="ChangeCode(this);">
-                            <script>
-                                // 点击一次,更改图片内容,
-                                function ChangeCode(ths){
-                                    ths.src = "{% url 'check_code' %}?t=" + Date.now();
-                                }
-                            </script>
-                    </div>
-                </div>
-                {% endif %}
-                <div class="layui-form-item">
-                    <div class="layui-input-inline login-input">
-                        <button class="layui-btn layui-btn-fluid layui-btn-radius  layui-btn-normal" lay-submit lay-filter="formDemo" type="submit">{% trans "登录" %}</button>
+                      <input type="password" name="password" required  lay-verify="required" placeholder="请输入LDAP密码" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-input-inline login-input">
-                        <a href="{% url 'ldap_login' %}" class="layui-btn layui-btn-fluid layui-btn-radius layui-btn-warm" style="text-decoration: none; color: white; text-align: center; display: block;">LDAP登录</a>
+                        <button class="layui-btn layui-btn-fluid layui-btn-radius layui-btn-warm" lay-submit lay-filter="ldapFormDemo" type="submit">LDAP登录</button>
                     </div>
                 </div>
-                {% if close_register == 'on' %}
-                <a class="register-link">{% trans "本站暂不开放注册" %}</a>&nbsp;
-                {% else %}
-                <a href="{% url 'register' %}" class="register-link">{% trans "注册账号" %}</a>&nbsp;
-                {% endif %}
-                {% if enable_email == 'on' %}
-                <a href="{% url 'forget_pwd' %}" class="register-link">{% trans "忘记密码" %}</a>
-                {% endif %}
+                <div class="layui-form-item">
+                    <div class="layui-input-inline login-input">
+                        <a href="{% url 'login' %}" class="layui-btn layui-btn-fluid layui-btn-radius layui-btn-normal" style="text-decoration: none; color: white; text-align: center; display: block;">返回普通登录</a>
+                    </div>
+                </div>
                 <a href="{% url 'pro_list' %}" class="register-link">{% trans "返回首页" %}</a>
                 <hr>
                 <span style="font-size: 12px;color: #666;">觅思文档 - 私有云知识库部署方案</span>
@@ -118,5 +99,19 @@
             </form>
         </div>
     </div>
+
+    <!-- LayUI JavaScript -->
+    <script src="{% static 'layui/layui.js' %}" crossorigin="anonymous"></script>
+    <script>
+        layui.use('form', function(){
+            var form = layui.form;
+            
+            //监听提交
+            form.on('submit(ldapFormDemo)', function(data){
+                // 这里可以添加表单提交前的验证逻辑
+                return true; // 允许表单提交
+            });
+        });
+    </script>
 </body>
 </html>

@@ -24,6 +24,7 @@ from app_admin import views as admin_views
 urlpatterns = [
     path('',include('app_doc.urls')), # doc应用
     path('login/', admin_views.log_in, name='login'),  # 登录
+    path('ldap_login/', admin_views.ldap_login, name='ldap_login'),  # LDAP登录
     path('logout/', admin_views.log_out, name='logout'),  # 注销
     path('register/', admin_views.register, name="register"),  # 注册
     path('check_code/', admin_views.check_code, name='check_code'),  # 注册验证码
