@@ -62,7 +62,6 @@ INSTALLED_APPS = [
     'app_admin', # 管理APP
     'app_doc', # 文档APP
     'app_api', # API APP
-    'django.contrib.sitemaps', # 站点地图
     'rest_framework',
     'corsheaders',
 ]
@@ -328,9 +327,6 @@ LIBREOFFICE_PATH = CONFIG.get('preview','libreoffice_path',fallback='soffice')
 PREVIEW_SUFFIX_OFFICE = ['opt','csv','doc','docx','odp','ods','ppt','pptx','tsv','wps','xls','xlsx','txt']
 # 附件预览格式
 DEFAULT_ATTACHMENT_PREVIEW_SUFFIX = ['pdf','mp4','flv','docx','xlsx','xls','csv','zip']
-
-# sitemap 站点地图
-SITEMAP = CONFIG.getboolean('sitemap','status',fallback=True)
 
 # 自定义文本文件显示
 extend_root_txt = CONFIG.get("extend_root_txt","filename",fallback=[])
