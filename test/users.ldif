@@ -1,0 +1,34 @@
+# 创建组织单位
+dn: ou=users,dc=example,dc=com
+objectClass: organizationalUnit
+ou: users
+
+# 创建测试用户1
+dn: uid=testuser1,ou=users,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: top
+cn: Test User One
+sn: User
+givenName: Test
+uid: testuser1
+userPassword: test123456
+uidNumber: 1001
+gidNumber: 1001
+homeDirectory: /home/testuser1
+mail: testuser1@example.com
+
+# 创建测试用户2  
+dn: uid=testuser2,ou=users,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: top
+cn: Test User Two
+sn: User
+givenName: Test
+uid: testuser2
+userPassword: test123456
+uidNumber: 1002
+gidNumber: 1002
+homeDirectory: /home/testuser2
+mail: testuser2@example.com
