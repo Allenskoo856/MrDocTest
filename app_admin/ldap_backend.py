@@ -23,18 +23,18 @@ class LDAPBackend(BaseBackend):
         config_path = os.path.join(settings.BASE_DIR, 'config', 'config.ini')
         self.config.read(config_path, encoding='utf-8')
         
-        # LDAP配置
-        self.server_uri = self.config.get('ldap', 'server_uri', fallback='ldap://localhost:389')
-        self.bind_dn = self.config.get('ldap', 'bind_dn', fallback='')
-        self.bind_password = self.config.get('ldap', 'bind_password', fallback='')
-        self.user_base_dn = self.config.get('ldap', 'user_base_dn', fallback='')
-        self.user_search_filter = self.config.get('ldap', 'user_search_filter', fallback='(uid={username})')
+        # LDAP配置，优先使用环境变量，其次使用配置文件
+        self.server_uri = os.getenv('LDAP_SERVER_URI') or self.config.get('ldap', 'server_uri', fallback='ldap://localhost:389')
+        self.bind_dn = os.getenv('LDAP_BIND_DN') or self.config.get('ldap', 'bind_dn', fallback='')
+        self.bind_password = os.getenv('LDAP_BIND_PASSWORD') or self.config.get('ldap', 'bind_password', fallback='')
+        self.user_base_dn = os.getenv('LDAP_USER_BASE_DN') or self.config.get('ldap', 'user_base_dn', fallback='')
+        self.user_search_filter = os.getenv('LDAP_USER_SEARCH_FILTER') or self.config.get('ldap', 'user_search_filter', fallback='(uid={username})')
         
         # 用户属性映射
-        self.attr_username = self.config.get('ldap', 'user_attr_username', fallback='uid')
-        self.attr_email = self.config.get('ldap', 'user_attr_email', fallback='mail')
-        self.attr_first_name = self.config.get('ldap', 'user_attr_first_name', fallback='givenName')
-        self.attr_last_name = self.config.get('ldap', 'user_attr_last_name', fallback='sn')
+        self.attr_username = os.getenv('LDAP_USER_ATTR_USERNAME') or self.config.get('ldap', 'user_attr_username', fallback='uid')
+        self.attr_email = os.getenv('LDAP_USER_ATTR_EMAIL') or self.config.get('ldap', 'user_attr_email', fallback='mail')
+        self.attr_first_name = os.getenv('LDAP_USER_ATTR_FIRST_NAME') or self.config.get('ldap', 'user_attr_first_name', fallback='givenName')
+        self.attr_last_name = os.getenv('LDAP_USER_ATTR_LAST_NAME') or self.config.get('ldap', 'user_attr_last_name', fallback='sn')
 
     def authenticate(self, request, username=None, password=None, **kwargs):
         """
@@ -53,8 +53,13 @@ class LDAPBackend(BaseBackend):
             return None
             
         try:
-            # 检查是否启用LDAP认证
-            enable_ldap = self.config.getboolean('ldap', 'enable_ldap', fallback=False)
+            # 检查是否启用LDAP认证（优先使用环境变量）
+            enable_ldap_env = os.getenv('LDAP_ENABLE')
+            if enable_ldap_env is not None:
+                enable_ldap = enable_ldap_env.lower() in ('true', '1', 'yes', 'on')
+            else:
+                enable_ldap = self.config.getboolean('ldap', 'enable_ldap', fallback=False)
+                
             if not enable_ldap:
                 return None
                 

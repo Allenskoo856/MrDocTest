@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  mrdoc:
+    image: zmister/mrdoc:v9.3  # 镜像名称和标签
+    volumes:
+      # 挂载配置文件目录
+      - ./config:/app/MrDoc/config
+      # 挂载媒体文件目录（图片、附件等）
+      - ./media:/app/MrDoc/media
+      # 挂载静态文件目录
+      - ./static:/app/MrDoc/static
+      # 挂载日志目录
+      - ./log:/app/MrDoc/log
+      # 可选：挂载整个项目目录（开发模式）
+      # - ${PWD}:/app/MrDoc
+    ports:
+      - "10086:10086"
+    environment:
+      # 时区设置
+      - TZ=Asia/Shanghai
+      # 可以通过环境变量覆盖配置
+      # - DATABASE_ENGINE=mysql
+      # - DATABASE_NAME=mrdoc
+      # - DATABASE_USER=mrdoc_user
+      # - DATABASE_PASSWORD=mrdoc_password
+      # - DATABASE_HOST=mysql
+      # - DATABASE_PORT=3306
+      # LDAP配置（如果需要）
+      # - LDAP_ENABLE=true
+      # - LDAP_SERVER_URI=ldap://your-ldap-server:389
+      # - LDAP_BIND_DN=cn=admin,dc=example,dc=com
+      # - LDAP_BIND_PASSWORD=your-password
+    restart: unless-stopped
+    dns:
+      - 8.8.8.8
+      - 114.114.114.114
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:10086/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

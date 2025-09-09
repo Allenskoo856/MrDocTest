@@ -11,7 +11,7 @@ ENV PYTHONUNBUFFERED=0 \
 # 替换 alpine 软件仓库的源并安装编译依赖
 RUN set -x \
     && sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories \
-    && apk add --no-cache --virtual .build-deps build-base g++ gcc libxslt-dev py3-lxml openldap-dev python3-dev linux-headers \
+    && apk add --no-cache --virtual .build-deps build-base g++ gcc libxslt-dev py3-lxml openldap-dev cyrus-sasl-dev python3-dev linux-headers \
     && apk add --no-cache git tzdata zlib-dev freetype-dev jpeg-dev mariadb-dev postgresql-dev
 
 # 设置工作目录并复制依赖文件
@@ -37,6 +37,8 @@ ENV PYTHONUNBUFFERED=0 \
 RUN set -x \
     && sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories \
     && apk add --no-cache tzdata chromium chromium-chromedriver libreoffice libreoffice-base libreoffice-lang-zh_cn ttf-dejavu fontconfig libmagic libffi-dev \
+    # 添加LDAP运行时库支持
+    && apk add --no-cache libldap libsasl \
     && ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
 
 # 复制字体文件

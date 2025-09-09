@@ -1,0 +1,114 @@
+# 完整的MrDoc + MySQL Docker Compose配置
+version: '3.8'
+
+services:
+  # MrDoc应用服务
+  mrdoc:
+    image: zmister/mrdoc:v9.3
+    container_name: mrdoc-app
+    ports:
+      - "10086:10086"
+    volumes:
+      # 挂载配置文件目录
+      - ./config:/app/MrDoc/config
+      # 挂载媒体文件目录（图片、附件等）
+      - ./media:/app/MrDoc/media
+      # 挂载静态文件目录
+      - ./static:/app/MrDoc/static
+      # 挂载日志目录
+      - ./log:/app/MrDoc/log
+      # 可选：挂载数据库备份目录
+      - ./backup:/app/MrDoc/backup
+    environment:
+      # 时区设置
+      TZ: Asia/Shanghai
+      # 数据库配置（优先级高于config.ini）
+      DATABASE_ENGINE: mysql
+      DATABASE_NAME: mrdoc
+      DATABASE_USER: mrdoc_user
+      DATABASE_PASSWORD: mrdoc_password
+      DATABASE_HOST: mysql
+      DATABASE_PORT: 3306
+      # LDAP配置（如果需要）
+      # LDAP_ENABLE: "true"
+      # LDAP_SERVER_URI: "ldap://your-ldap-server:389"
+      # LDAP_BIND_DN: "cn=admin,dc=example,dc=com"
+      # LDAP_BIND_PASSWORD: "your-password"
+      # LDAP_USER_BASE_DN: "ou=users,dc=example,dc=com"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+    dns:
+      - 8.8.8.8
+      - 114.114.114.114
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:10086/"] 
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - mrdoc-network
+
+  # MySQL数据库服务
+  mysql:
+    image: mysql:8.0
+    container_name: mrdoc-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_123
+      MYSQL_DATABASE: mrdoc
+      MYSQL_USER: mrdoc_user
+      MYSQL_PASSWORD: mrdoc_password
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      # 持久化数据库数据
+      - mysql_data:/var/lib/mysql
+      # 可选：挂载MySQL配置文件
+      - ./mysql/conf.d:/etc/mysql/conf.d
+      # 可选：挂载初始化SQL脚本
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password_123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - mrdoc-network
+
+  # 可选：Redis缓存服务
+  redis:
+    image: redis:7-alpine
+    container_name: mrdoc-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      # 可选：挂载Redis配置文件
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - mrdoc-network
+
+# 数据卷
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+
+# 网络
+networks:
+  mrdoc-network:
+    driver: bridge
