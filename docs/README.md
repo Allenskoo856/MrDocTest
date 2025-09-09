@@ -4,6 +4,12 @@
 
 ## 📋 文档列表
 
+### 项目核心文档
+- [**中文说明文档**](README-zh.md) - 详细的中文项目介绍
+- [**变更日志**](CHANGES.md) - 项目版本变更记录
+- [**许可证**](LICENSE) - 项目开源许可证
+- [**GEMINI文档**](GEMINI.md) - 项目相关说明
+
 ### 部署文档
 - [**Docker部署指南**](DOCKER_DEPLOYMENT_GUIDE.md) - 完整的Docker容器化部署指南
   - 基础部署和完整部署方案
@@ -17,9 +23,13 @@
   - Docker Compose示例
   - 安全建议和故障排除
 
-### 项目文档
-- [**中文说明文档**](README-zh.md) - 详细的中文项目介绍
-- [**GEMINI文档**](GEMINI.md) - 项目相关说明
+### 开发文档
+- [**架构文档**](Architecture.md) - 系统架构说明
+- [**开发指南**](Development.md) - 开发环境配置和开发指南
+- [**配置文档**](Configuration.md) - 详细配置说明
+- [**安装文档**](Installation.md) - 安装部署说明
+- [**API文档**](API.md) - API接口说明
+- [**主页文档**](Home.md) - 项目主页说明
 
 ## 🎯 快速导航
 
