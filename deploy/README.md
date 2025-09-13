@@ -24,7 +24,22 @@
 
 ## 🚀 部署方式
 
-### 1. 简单部署（仅应用）
+### 1. 使用预构建镜像（推荐）
+
+如果项目已配置 GitHub Actions，可以直接使用预构建的 Docker 镜像：
+
+```bash
+# 基础部署（使用预构建镜像）
+docker run -d -p 10086:10086 --name mrdoc YOUR_DOCKERHUB_USERNAME/mrdoc:latest
+
+# 使用 Docker Compose——编辑 docker-compose.yml 修改镜像名称
+services:
+  mrdoc:
+    image: YOUR_DOCKERHUB_USERNAME/mrdoc:latest
+    # ... 其他配置
+```
+
+### 2. 简单部署（仅应用）
 
 ```bash
 # 启动基础服务

@@ -1,5 +1,9 @@
 # MrDoc - 私有云文档部署方案
 
+[![Auto Build on Master](https://github.com/YOUR_GITHUB_USERNAME/MrDocTest/actions/workflows/auto-build-master.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/MrDocTest/actions/workflows/auto-build-master.yml)
+[![Docker Build and Deploy](https://github.com/YOUR_GITHUB_USERNAME/MrDocTest/actions/workflows/docker-advanced.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/MrDocTest/actions/workflows/docker-advanced.yml)
+[![Docker Hub](https://img.shields.io/docker/pulls/YOUR_DOCKERHUB_USERNAME/mrdoc.svg)](https://hub.docker.com/r/YOUR_DOCKERHUB_USERNAME/mrdoc)
+
 MrDoc 是一个基于 Python 的开源在线文档系统，适用于个人和中小型团队的知识管理、云笔记、云文档私有化部署需求。
 
 ## 📁 项目结构

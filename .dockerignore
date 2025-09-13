@@ -1,0 +1,91 @@
+# Git 相关文件
+.git
+.github
+.gitignore
+.gitattributes
+
+# 开发环境文件
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Python 相关
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.pytest_cache/
+.mypy_cache/
+
+# 虚拟环境
+venv/
+ENV/
+env/
+.env
+
+# Node.js 相关 (如果有前端构建)
+node_modules
+npm-debug.log
+yarn-error.log
+
+# 数据库文件
+*.db
+*.sqlite3
+db.sqlite3
+
+# 媒体和静态文件（运行时生成）
+media/
+# static/ 不排除，因为包含必要的前端资源
+
+# 日志文件
+*.log
+log/
+
+# 临时文件
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# 测试文件
+.pytest_cache
+.coverage
+htmlcov/
+
+# 文档和说明文件
+README.md
+README-zh.md
+CHANGES.md
+LICENSE
+docs/
+
+# 部署脚本（可选，取决于是否需要）
+deploy/scripts/
+deploy/README.md
+
+# IDE 配置
+*.sublime-project
+*.sublime-workspace
+
+# 备份文件
+*.bak
+*.backup
+
+# macOS 特有文件
+.DS_Store
+.AppleDouble
+.LSOverride
