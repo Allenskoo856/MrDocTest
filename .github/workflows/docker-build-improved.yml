@@ -1,0 +1,146 @@
+name: Docker Build and Push (Improved)
+
+# 仅在推送到 master 分支时触发
+on:
+  push:
+    branches: [ master ]
+
+env:
+  IMAGE_NAME: mymrdoc
+  REGISTRY: docker.io
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 🔍 检出代码
+      uses: actions/checkout@v4
+
+    - name: 🛠️ 设置 Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      with:
+        version: latest
+        driver-opts: network=host
+
+    - name: 🔐 验证 DockerHub 凭据
+      id: check-secrets
+      run: |
+        if [ -z "${{ secrets.DOCKERHUB_USERNAME }}" ]; then
+          echo "❌ 错误: 缺少 DOCKERHUB_USERNAME"
+          echo "missing_username=true" >> $GITHUB_OUTPUT
+        else
+          echo "✅ DockerHub 用户名已配置: ${{ secrets.DOCKERHUB_USERNAME }}"
+          echo "missing_username=false" >> $GITHUB_OUTPUT
+        fi
+        
+        if [ -z "${{ secrets.DOCKERHUB_TOKEN }}" ]; then
+          echo "❌ 错误: 缺少 DOCKERHUB_TOKEN"
+          echo "missing_token=true" >> $GITHUB_OUTPUT
+        else
+          echo "✅ DockerHub Token 已配置"
+          echo "missing_token=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: 📝 显示配置指南
+      if: steps.check-secrets.outputs.missing_username == 'true' || steps.check-secrets.outputs.missing_token == 'true'
+      run: |
+        echo "🚨 DockerHub 认证配置不完整！"
+        echo ""
+        echo "📋 请在 GitHub 仓库设置中添加以下 Secrets:"
+        echo "   🔗 https://github.com/${{ github.repository }}/settings/secrets/actions"
+        echo ""
+        echo "🔑 需要添加的 Secrets:"
+        if [ "${{ steps.check-secrets.outputs.missing_username }}" = "true" ]; then
+          echo "   ❌ DOCKERHUB_USERNAME - 您的 DockerHub 用户名"
+        fi
+        if [ "${{ steps.check-secrets.outputs.missing_token }}" = "true" ]; then
+          echo "   ❌ DOCKERHUB_TOKEN - 您的 DockerHub 访问令牌"
+        fi
+        echo ""
+        echo "🎯 获取 DockerHub Token 的步骤:"
+        echo "   1. 登录 https://hub.docker.com/"
+        echo "   2. 右上角头像 → Account Settings"
+        echo "   3. Security → New Access Token"
+        echo "   4. 创建具有 Read, Write, Delete 权限的 Token"
+        echo "   5. 复制生成的 Token 到 GitHub Secrets"
+        exit 1
+
+    - name: 🐳 登录 DockerHub
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: 📥 下载中文字体
+      run: |
+        echo "📥 正在下载中文字体文件..."
+        curl -L -o SourceHanSerifCN-Medium.otf "https://github.com/adobe-fonts/source-han-serif/raw/release/OTF/SimplifiedChinese/SourceHanSerifCN-Medium.otf"
+        if [ -f "SourceHanSerifCN-Medium.otf" ]; then
+          echo "✅ 字体文件下载完成 ($(du -h SourceHanSerifCN-Medium.otf | cut -f1))"
+        else
+          echo "❌ 字体文件下载失败"
+          exit 1
+        fi
+
+    - name: 📊 获取提交信息
+      id: commit
+      run: |
+        echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        echo "commit_msg=$(git log -1 --pretty=%B | head -1)" >> $GITHUB_OUTPUT
+        echo "build_date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
+
+    - name: 🏷️ 生成镜像标签
+      id: meta
+      run: |
+        TAGS=""
+        TAGS="$TAGS${{ env.REGISTRY }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest"
+        TAGS="$TAGS,${{ env.REGISTRY }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:master"
+        TAGS="$TAGS,${{ env.REGISTRY }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.commit.outputs.sha_short }}"
+        echo "tags=$TAGS" >> $GITHUB_OUTPUT
+        
+        echo "🏷️ 将要构建的标签:"
+        echo "$TAGS" | tr ',' '\n' | sed 's/^/  - /'
+
+    - name: 🔨 构建并推送 Docker 镜像
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: |
+          org.opencontainers.image.title=MrDoc
+          org.opencontainers.image.description=MrDoc 在线文档系统 - 私有化部署方案
+          org.opencontainers.image.source=https://github.com/${{ github.repository }}
+          org.opencontainers.image.version=${{ steps.commit.outputs.sha_short }}
+          org.opencontainers.image.revision=${{ github.sha }}
+          org.opencontainers.image.created=${{ steps.commit.outputs.build_date }}
+          org.opencontainers.image.vendor=MrDoc
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-args: |
+          BUILDKIT_INLINE_CACHE=1
+
+    - name: 🎉 构建成功通知
+      run: |
+        echo "🎉 Docker 镜像构建并推送成功！"
+        echo ""
+        echo "📦 镜像信息:"
+        echo "${{ steps.meta.outputs.tags }}" | tr ',' '\n' | sed 's/^/  - /'
+        echo ""
+        echo "🚀 使用方式:"
+        echo "  # 拉取最新镜像"
+        echo "  docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest"
+        echo ""
+        echo "  # 运行容器"
+        echo "  docker run -d -p 10086:10086 --name mrdoc ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest"
+        echo ""
+        echo "  # 使用 Docker Compose"
+        echo "  # 编辑 deploy/docker-compose.yml 中的镜像名称为:"
+        echo "  # image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest"
+        echo ""
+        echo "📝 本次提交: ${{ steps.commit.outputs.commit_msg }}"
+        echo "🕐 构建时间: ${{ steps.commit.outputs.build_date }}"
