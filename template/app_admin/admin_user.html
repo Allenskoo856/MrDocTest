@@ -70,6 +70,7 @@
       {% endverbatim %}
     </script>
 <script>
+        var URL_PREFIX = '{{ url_prefix }}';
     layui.use(['table','jquery','form','layer','element','table'], function() {
         let table = layui.table;
         let form = layui.form;
@@ -200,7 +201,7 @@
                         'password2':$("#newPwd2").val(),
                     }
                     $.ajax({
-                        url:'/admin/api/user/'+uid,
+                        url: URL_PREFIX + '/admin/api/user/'+uid,
                         type:'put',
                         data:data,
                         success:function(r){
@@ -240,7 +241,7 @@
                 yes:function (index,layero) {
                     layer.load(1);
                     $.ajax({
-                        url:'/admin/api/user/'+uid,
+                        url: URL_PREFIX + '/admin/api/user/'+uid,
                         type:'delete',
                         success:function(r){
                             layer.closeAll();

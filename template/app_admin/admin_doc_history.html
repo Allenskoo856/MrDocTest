@@ -38,7 +38,7 @@
 <!-- 单个历史记录操作 -->
 <script type="text/html" id="history-bar">
     {% verbatim %}
-    <a href="/diff_doc/{{d.doc}}-{{d.id}}/" title="对比查看" class="pear-btn pear-btn-normal pear-btn-sm" target="_blank"><i class="pear-icon pear-icon-browse"></i></a>
+    <a href="{{ url_prefix }}/diff_doc/{% verbatim %}{{d.doc}}{% endverbatim %}-{% verbatim %}{{d.id}}{% endverbatim %}/" title="对比查看" class="pear-btn pear-btn-normal pear-btn-sm" target="_blank"><i class="pear-icon pear-icon-browse"></i></a>
     <button class="pear-btn pear-btn-danger pear-btn-sm" title="删除记录" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
     {% endverbatim %}
 </script>
@@ -46,6 +46,7 @@
 {% endblock %}
 {% block custom_script %}
 <script>
+        var URL_PREFIX = '{{ url_prefix }}';
     layui.use(['table', 'form', 'jquery','layer','element'], function() {
         let table = layui.table;
         let form = layui.form;
@@ -69,7 +70,7 @@
         table.render({
             elem: '#history-table',
             method:'get',
-            url: "/admin/api/doc_history/" + '{{doc.id}}' + '/',
+            url: URL_PREFIX + "/admin/api/doc_history/" + '{{doc.id}}' + '/',,
             page: true,
             cols: cols,
             skin: 'line',
@@ -96,7 +97,7 @@
                         'history_id':history_id,
                     }
                     $.ajax({
-                        url:'/admin/api/doc_history_detail/',
+                        url: URL_PREFIX + '/admin/api/doc_history_detail/',
                         type:'delete',
                         data:{'id':history_id},
                         success:function(r){

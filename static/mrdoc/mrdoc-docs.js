@@ -398,7 +398,7 @@ function initWhterMark(value){
 // 文集、文档收藏函数
 function collect(id,type){
     $.ajax({
-        url:'/my_collect/',
+        url: (window.MRDOC_URL_PREFIX || '') + '/my_collect/',
         type:'post',
         data:{'type':type,'id':id},
         success:function(r){

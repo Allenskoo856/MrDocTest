@@ -65,7 +65,7 @@
 
 <!-- 表格工具栏 -->
 <script type="text/html" id="doc-toolbar">
-    <a class="pear-btn pear-btn-primary pear-btn-sm" href="/create_doc/" target="_blank">
+    <a class="pear-btn pear-btn-primary pear-btn-sm" href="{{ url_prefix }}/create_doc/" target="_blank">
         <i class="layui-icon layui-icon-add-1"></i>新增
     </a>
     <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="batchRemove">
@@ -78,10 +78,10 @@
     {% verbatim %}
         {{#if (d.status == 1) { }}
             <span class="layui-badge-dot layui-bg-blue"></span>
-            <a href="/project-{{d.project_id}}/doc-{{d.id}}" target="_blank">{{=d.name}}</a>
+            <a href="{{ url_prefix }}/project-{% verbatim %}{{d.project_id}}{% endverbatim %}/doc-{% verbatim %}{{d.id}}{% endverbatim %}" target="_blank">{% verbatim %}{{=d.name}}{% endverbatim %}</a>
         {{# }else if(d.status == 0){ }}
             <span class="layui-badge-dot layui-bg-orange"></span>
-            <a href="/modify_doc/{{d.id}}/" target="_blank" title="修改文档：{{=d.name}}">{{=d.name}} </a>
+            <a href="{{ url_prefix }}/modify_doc/{% verbatim %}{{d.id}}{% endverbatim %}/" target="_blank" title="修改文档：{% verbatim %}{{=d.name}}{% endverbatim %}">{% verbatim %}{{=d.name}}{% endverbatim %} </a>
         {{# } }}
         {{#if (d.editor_mode in [1,2,3]) { }}
             <i class="layui-icon layui-icon-form" title="普通文档"></i>
@@ -138,8 +138,8 @@
 <!-- 单个文档操作 -->
 <script type="text/html" id="doc-bar">
     {% verbatim %}
-    <a href="/manage_doc_history/{{d.id}}/" class="pear-btn pear-btn-sm"><i class="layui-icon layui-icon-log"></i></a>
-    <a href="/modify_doc/{{d.id}}/" title="修改文档" class="pear-btn pear-btn-sm" target="_blank"><i class="layui-icon layui-icon-edit"></i></a>
+    <a href="{{ url_prefix }}/manage_doc_history/{% verbatim %}{{d.id}}{% endverbatim %}/" class="pear-btn pear-btn-sm"><i class="layui-icon layui-icon-log"></i></a>
+    <a href="{{ url_prefix }}/modify_doc/{% verbatim %}{{d.id}}{% endverbatim %}/" title="修改文档" class="pear-btn pear-btn-sm" target="_blank"><i class="layui-icon layui-icon-edit"></i></a>
     <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
     {% endverbatim %}
 </script>
@@ -147,6 +147,7 @@
 {% endblock %}
 {% block custom_script %}
 <script>
+    var URL_PREFIX = '{{ url_prefix }}';
     layui.use(['table', 'form', 'jquery', 'dtree','layer'], function() {
         let table = layui.table;
         let form = layui.form;

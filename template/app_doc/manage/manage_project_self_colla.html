@@ -52,14 +52,15 @@
 <script type="text/html" id="colla-bar">
     {% verbatim %}
         {{# if (d.type == 'doc'){ }}
-        <a class="pear-btn pear-btn-primary pear-btn-sm" href="/modify_doc/{{d.project_id}}/" target="_blank"><i class="layui-icon layui-icon-edit"></i></button>
+        <a class="pear-btn pear-btn-primary pear-btn-sm" href="{{ url_prefix }}/modify_doc/{{d.project_id}}/" target="_blank"><i class="layui-icon layui-icon-edit"></i></button>
         {{# }else{ }}
-        <a class="pear-btn pear-btn-primary pear-btn-sm" href="/create_doc/?pid={{d.project_id}}" target="_blank"><i class="layui-icon layui-icon-add-1"></i></button>
+        <a class="pear-btn pear-btn-primary pear-btn-sm" href="{{ url_prefix }}/create_doc/?pid={{d.project_id}}" target="_blank"><i class="layui-icon layui-icon-add-1"></i></button>
         {{# } }}
     {% endverbatim %}
 </script>
 
 <script>
+    var URL_PREFIX = '{{ url_prefix }}';
     layui.use(['table','jquery','form','layer','element','treetable'], function() {
         let table = layui.table;
         let form = layui.form;

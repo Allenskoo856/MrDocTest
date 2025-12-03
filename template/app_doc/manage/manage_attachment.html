@@ -40,7 +40,7 @@
         <tbody>
             {% for attachment in attachments %}
             <tr>
-                <td><a href="/media/{{attachment.file_path}}" target="_blank">{{ attachment.file_name }}</a></td>
+                <td><a href="{{ url_prefix }}/media/{{attachment.file_path}}" target="_blank">{{ attachment.file_name }}</a></td>
                 <td>{{ attachment.file_size }}</td>
                 <td>{{ attachment.create_time }}</td>
                 <td>
@@ -80,6 +80,7 @@
 {% endblock %}
 {% block custom_script %}
 <script>
+    var URL_PREFIX = '{{ url_prefix }}';
     layui.use(['table', 'form', 'jquery', 'dtree','upload'], function() {
         let table = layui.table;
         let form = layui.form;

@@ -90,7 +90,7 @@
         // 获取用户资料
         getUserProfile = function(){
             $.ajax({
-                url:'/admin/api/user/'+user_id,
+                url: URL_PREFIX + '/admin/api/user/'+user_id,
                 type:'get',
                 success:function(r){
                     if(r.code === 0){
@@ -128,7 +128,7 @@
                         'password2':$("#newPwd2").val(),
                     }
                     $.ajax({
-                        url:'/admin/api/user/'+user_id,
+                        url: URL_PREFIX + '/admin/api/user/'+user_id,
                         type:'put',
                         data:data,
                         success:function(r){
@@ -156,7 +156,7 @@
             data['obj'] = 'info'
             // console.log(data)
             $.ajax({
-                url:'/admin/api/user/'+user_id,
+                url: URL_PREFIX + '/admin/api/user/'+user_id,
                 type:'put',
                 data:data,
                 success:function(r){

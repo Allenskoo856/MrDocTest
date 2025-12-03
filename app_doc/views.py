@@ -19,6 +19,7 @@ from django.db.models import Q
 from django.db import transaction
 from django.utils.html import strip_tags,escape
 from django.utils.translation import gettext_lazy as _
+from django.conf import settings
 from loguru import logger
 from app_api.serializers_app import *
 from app_doc.report_utils import *
@@ -444,7 +445,7 @@ def project_index(request,pro_id):
                 viewcode_name = 'viewcode-{}'.format(project.id)
                 r_viewcode = request.COOKIES[viewcode_name] if viewcode_name in request.COOKIES.keys() else 0 # 从cookie中获取访问码
                 if viewcode != r_viewcode: # cookie中的访问码不等于文集访问码，跳转到访问码认证界面
-                    return redirect('/check_viewcode/?to={}'.format(request.path))
+                    return redirect(getattr(settings, 'URL_PREFIX', '') + '/check_viewcode/?to={}'.format(request.path))
 
         # 获取搜索词
         kw = request.GET.get('kw','')
@@ -1052,7 +1053,7 @@ def doc(request,pro_id,doc_id):
                     r_viewcode = request.COOKIES[
                         viewcode_name] if viewcode_name in request.COOKIES.keys() else 0  # 从cookie中获取访问码
                     if viewcode != r_viewcode:  # cookie中的访问码不等于文集访问码，跳转到访问码认证界面
-                        return redirect('/check_viewcode/?to={}'.format(request.path))
+                        return redirect(getattr(settings, 'URL_PREFIX', '') + '/check_viewcode/?to={}'.format(request.path))
 
             # 获取文档内容
             try:
@@ -1145,7 +1146,7 @@ def doc_id(request,doc_id):
                 r_viewcode = request.COOKIES[
                     viewcode_name] if viewcode_name in request.COOKIES.keys() else 0  # 从cookie中获取访问码
                 if viewcode != r_viewcode:  # cookie中的访问码不等于文集访问码，跳转到访问码认证界面
-                    return redirect('/check_viewcode/?to={}'.format(request.path))
+                    return redirect(getattr(settings, 'URL_PREFIX', '') + '/check_viewcode/?to={}'.format(request.path))
 
         # 获取文档内容
         try:
@@ -1846,7 +1847,7 @@ def share_doc(request):
                     return render(request, 'app_doc/share/share_doc.html', locals())
                 else:
                     share_pwd = request.GET.get('pwd', '')
-                    return redirect('/share_doc_check/?surl={}&pwd={}'.format(share_token, share_pwd))
+                    return redirect(getattr(settings, 'URL_PREFIX', '') + '/share_doc_check/?surl={}&pwd={}'.format(share_token, share_pwd))
         except ObjectDoesNotExist:
             return render(request,'404.html')
     elif request.method == 'POST':
@@ -1900,7 +1901,7 @@ def share_doc_check(request):
             share_cookie_name = 'sharedoc-{}'.format(doc_token)
             share_value = request.COOKIES.get(share_cookie_name) if share_cookie_name in request.COOKIES.keys() else 0
             if doc_share.share_value == share_value:
-                return redirect("/share_doc/?token={}".format(doc_token))
+                return redirect(getattr(settings, 'URL_PREFIX', '') + "/share_doc/?token={}".format(doc_token))
             else:
                 return render(request,'app_doc/share/share_check.html',locals())
         else:
@@ -1910,7 +1911,7 @@ def share_doc_check(request):
         share_value = request.POST.get('share_value','')
         # 查询数据
         if DocShare.objects.filter(token=doc_token,share_type=1,share_value=share_value).exists():
-            obj = redirect("/share_doc/?token={}".format(doc_token))
+            obj = redirect(getattr(settings, 'URL_PREFIX', '') + "/share_doc/?token={}".format(doc_token))
             obj.set_cookie('sharedoc-{}'.format(doc_token),share_value)
             return obj
         else:
@@ -3312,7 +3313,7 @@ def tag_doc(request,tag_id,doc_id):
                     r_viewcode = request.COOKIES[
                         viewcode_name] if viewcode_name in request.COOKIES.keys() else 0  # 从cookie中获取访问码
                     if viewcode != r_viewcode:  # cookie中的访问码不等于文集访问码，跳转到访问码认证界面
-                        return redirect('/check_viewcode/?to={}'.format(request.path))
+                        return redirect(getattr(settings, 'URL_PREFIX', '') + '/check_viewcode/?to={}'.format(request.path))
 
             # 获取文档内容
             try:

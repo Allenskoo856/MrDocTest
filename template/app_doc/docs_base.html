@@ -316,9 +316,13 @@
 <script src="{% static 'qrcodejs/qrcode.min.js' %}?version={{mrdoc_version}}"></script>
 <script src="{% static 'darkmode-js/darkmode-js.min.js' %}?version={{mrdoc_version}}"></script>
 <script src="{% static '/markjs/mark.min.js' %}?version={{mrdoc_version}}" charset="UTF-8"></script>
+<script>
+    window.MRDOC_URL_PREFIX = '{{ url_prefix }}';
+</script>
 <script src="{% static 'mrdoc/mrdoc-docs.js' %}?version={{mrdoc_version}}"></script>
 <script src="{% static 'iconFont/iconfont.js' %}?version={{mrdoc_version}}"></script>
 <script>
+    var URL_PREFIX = '{{ url_prefix }}';
     $.ajaxSetup({
         data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
     });
@@ -333,7 +337,7 @@
                 toc_str += "<li>"
                 if(item['children'] != undefined){ // 存在下级文档
                     li = '<div style="display:flex;justify-content:space-between;">' +
-                        '<a href="/doc/'+item.id +'/" title="' +
+                        '<a href="' + URL_PREFIX + '/doc/'+item.id +'/" title="' +
                         item.title +
                         '">' +
                         '<i class="iconfont mrdoc-icon-wendang"></i>&nbsp' +
@@ -346,9 +350,9 @@
                     toc_str += '</ul>'
                 }else{//不存在下级文档
                    if(item.editor_mode == 4){
-                       li = '<a href="/doc/'+ item.id +'/" class="doc-link" title="'+ item.title +'"><i class="iconfont mrdoc-icon-table"></i>&nbsp;' + item.title + '</a>'
+                       li = '<a href="' + URL_PREFIX + '/doc/'+ item.id +'/" class="doc-link" title="'+ item.title +'"><i class="iconfont mrdoc-icon-table"></i>&nbsp;' + item.title + '</a>'
                    }else{
-                       li = '<a href="/doc/'+ item.id +'/" class="doc-link" title="'+ item.title +'"><i class="iconfont mrdoc-icon-wendang"></i>&nbsp;' + item.title + '</a>'
+                       li = '<a href="' + URL_PREFIX + '/doc/'+ item.id +'/" class="doc-link" title="'+ item.title +'"><i class="iconfont mrdoc-icon-wendang"></i>&nbsp;' + item.title + '</a>'
                    }
 
                    toc_str += li
@@ -360,7 +364,7 @@
 
         initProjectToc = function(data){
             $.ajax({
-                url:'/get_pro_doc_tree/',
+                url: URL_PREFIX + '/get_pro_doc_tree/',
                 type:'post',
                 data:data,
                 success:function(r){
@@ -400,7 +404,7 @@
         // 文集大纲分页数据
         getProjectTocPage = function(page){
             $.ajax({
-                url:'/get_pro_doc_tree/',
+                url: URL_PREFIX + '/get_pro_doc_tree/',
                 type:'post',
                 data:{'pro_id':pro_id,'is_page':true,'page':page},
                 success:function(r){

@@ -15,6 +15,14 @@ import os
 from configparser import ConfigParser,RawConfigParser
 from loguru import logger
 
+URL_PREFIX = os.getenv('URL_PREFIX', '')
+if URL_PREFIX:
+    if not URL_PREFIX.startswith('/'):
+        URL_PREFIX = '/' + URL_PREFIX
+    if URL_PREFIX.endswith('/'):
+        URL_PREFIX = URL_PREFIX[:-1]
+    FORCE_SCRIPT_NAME = URL_PREFIX
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -201,7 +209,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-LOGIN_URL = 'login'
+LOGIN_URL = URL_PREFIX + '/login/' if URL_PREFIX else '/login/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
@@ -239,7 +247,7 @@ SESSION_COOKIE_HTTPONLY = CONFIG.getboolean('session','cookie_httponly',fallback
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = URL_PREFIX + '/static/'
 if DEBUG:
     STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
     STATICFILES_DIR = os.path.join(BASE_DIR, 'static')
@@ -247,7 +255,7 @@ else:
     STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
 # 媒体文件
-MEDIA_URL = CONFIG.get('media', 'media_url', fallback='/media/')
+MEDIA_URL = CONFIG.get('media', 'media_url', fallback=URL_PREFIX + '/media/')
 MEDIA_ROOT_RELATIVE = CONFIG.get('media', 'media_root', fallback='media')
 MEDIA_ROOT = os.path.join(BASE_DIR, MEDIA_ROOT_RELATIVE)
 if os.path.exists(MEDIA_ROOT) is False:

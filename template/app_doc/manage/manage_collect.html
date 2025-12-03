@@ -44,11 +44,11 @@
     {% verbatim %}
         {{#if (d.type == 1) { }}
             <img src="/static/icon_img/manage-doc-icon.svg" height="14px" width="14px"></img>
-            <a href="/project-{{d.item_project_id}}/doc-{{d.item_id}}" target="_blank">{{d.item_name}}</a>
+            <a href="{{ url_prefix }}/project-{{d.item_project_id}}/doc-{{d.item_id}}" target="_blank">{{d.item_name}}</a>
         {{# }else if(d.type == 2){ }}
             <!-- <span class="layui-badge-dot layui-bg-orange"></span> -->
             <img src="/static/icon_img/manage-pro-icon.svg" height="14px" width="14px"></img>
-            <a href="/project-{{d.item_id}}/" target="_blank">{{ d.item_name }} </a>
+            <a href="{{ url_prefix }}/project-{{d.item_id}}/" target="_blank">{{ d.item_name }} </a>
         {{# } }}
     {% endverbatim %}
 </script>
@@ -70,6 +70,7 @@
 {% endblock %}
 {% block custom_script %}
 <script>
+    var URL_PREFIX = '{{ url_prefix }}';
     layui.use(['table', 'form', 'jquery', 'dtree','layer'], function() {
         let table = layui.table;
         let form = layui.form;

@@ -54,10 +54,12 @@ def check_code(request):
 
 # 登录视图
 def log_in(request):
-    to = request.GET.get('next', '/')
+    from django.conf import settings
+    url_prefix = getattr(settings, 'URL_PREFIX', '')
+    to = request.GET.get('next', url_prefix + '/')
     safe_to = is_internal_path(to)
     if safe_to is False:
-        to = '/'
+        to = url_prefix + '/'
     if request.method == 'GET':
         # 登录用户访问登录页面自动跳转到首页
         if request.user.is_authenticated:
@@ -132,9 +134,11 @@ def log_in(request):
 @open_register
 @logger.catch()
 def register(request):
+    from django.conf import settings
+    url_prefix = getattr(settings, 'URL_PREFIX', '')
     # 如果登录用户访问注册页面，跳转到首页
     if request.user.is_authenticated:
-        return redirect('/')
+        return redirect(url_prefix + '/')
     else:
         if request.method == 'GET':
             return render(request,'register.html',locals())
@@ -211,7 +215,7 @@ def register(request):
                                 )
                         if user.is_active:
                             login(request, user)
-                            return redirect('/')
+                            return redirect(url_prefix + '/')
                         else:
                             errormsg = _('用户被禁用，请联系管理员！')
                             return render(request, 'register.html', locals())

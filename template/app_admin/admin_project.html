@@ -29,7 +29,7 @@
 <!-- 文集名称 -->
 <script type="text/html" id="project-name">
     {% verbatim %}
-    <a href="/project-{{d.id}}/" target="_blank">
+    <a href="{{ url_prefix }}/project-{% verbatim %}{{d.id}}{% endverbatim %}/" target="_blank">
         {{d.name}}
         {{#if (d.role == 0) { }}
         {{# }else if(d.role == 1){ }}
@@ -70,7 +70,7 @@
 <!-- 协作人数 -->
 <script type="text/html" id="colla-cnt">
     {% verbatim %}
-    <span>{{d.colla_total}}</span> <a href="/admin/project_colla_config/{{d.id}}/"  title="管理文集协作"><i class="layui-icon layui-icon-set"></i></a>
+    <span>{% verbatim %}{{d.colla_total}}{% endverbatim %}</span> <a href="{{ url_prefix }}/admin/project_colla_config/{% verbatim %}{{d.id}}{% endverbatim %}/"  title="管理文集协作"><i class="layui-icon layui-icon-set"></i></a>
     {% endverbatim %}
 </script>
 

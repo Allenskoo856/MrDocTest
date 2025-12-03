@@ -48,7 +48,7 @@
 <!-- 附件名 -->
 <script type="text/html" id="fileName">
     {% verbatim %}
-        <a href="/media/{{decodeURI(d.file_path)}}" target="_blank" >{{ d.file_name }} </a>
+        <a href="{{ url_prefix }}/media/{{decodeURI(d.file_path)}}" target="_blank" >{{ d.file_name }} </a>
     {% endverbatim %}
 </script>
 
@@ -78,6 +78,7 @@
 
 <script src="{% static 'viewerjs/viewer.min.js' %}"></script>
 <script>
+    var URL_PREFIX = '{{ url_prefix }}';
     layui.use(['table','jquery','form','layer','element','table'], function() {
         let table = layui.table;
         let form = layui.form;
@@ -154,7 +155,7 @@
                 btnAlign:'c', //按钮居中
                 yes:function (index,layero) {
                     $.ajax({
-                        url:'/admin/api/attachment/'+id + '/',
+                        url: URL_PREFIX + '/admin/api/attachment/'+id + '/',
                         type:'delete',
                         success:function(r){
                             layer.closeAll()

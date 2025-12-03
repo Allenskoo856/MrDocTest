@@ -307,13 +307,13 @@
         form.on('select()', function(data){
             var filter_data = form.val("filter-project-form");
             // console.log(filter_data)
-            window.location.href = '/?sort=' + filter_data['sort'] + '&role=' + filter_data['role'] + '&kw={{kw}}' 
+            window.location.href = '{{ url_prefix }}/?sort=' + filter_data['sort'] + '&role=' + filter_data['role'] + '&kw={{kw}}' 
         });
         // 首页文集搜索框回车事件
         $("#search-project").keydown(function(e){
             if(e.keyCode === 13){
                 var filter_data = form.val("filter-project-form");
-                window.location.href = '/?sort=' + filter_data['sort'] + '&role=' + filter_data['role'] + '&kw=' + filter_data['kw'];
+                window.location.href = '{{ url_prefix }}/?sort=' + filter_data['sort'] + '&role=' + filter_data['role'] + '&kw=' + filter_data['kw'];
             }
         })
         
@@ -396,7 +396,7 @@
                         data:data,
                         success:function(r){
                             if(r.status){
-                                window.location.href = '/create_doc/?pid=' + r.data.id;
+                                window.location.href = '{{ url_prefix }}/create_doc/?pid=' + r.data.id;
                             }else{
                                 //创建失败，提示
                                 // console.log(r)

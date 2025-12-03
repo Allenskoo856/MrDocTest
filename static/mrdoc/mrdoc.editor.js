@@ -12,13 +12,14 @@ function InsertLine(obj) {
 }
 
 function linebody(count, name) {
+  var urlPrefix = window.MRDOC_URL_PREFIX || '';
   var body = "<tr><td></td>";
   for (var i = 0; i < count; i++) {
       body += "<td><div contenteditable='true'></div></td>";
   }
 
-  body += "<td><img src='/static/mrdoc-editor/add.gif' name='" + name + "' style='cursor: pointer' onclick='InsertLine(this)'>" +
-      "<img src='/static/mrdoc-editor/delete.gif'  name='" + name + "' style='cursor: pointer' onclick='DeleteLine(this)'></td>";
+  body += "<td><img src='" + urlPrefix + "/static/mrdoc-editor/add.gif' name='" + name + "' style='cursor: pointer' onclick='InsertLine(this)'>" +
+      "<img src='" + urlPrefix + "/static/mrdoc-editor/delete.gif'  name='" + name + "' style='cursor: pointer' onclick='DeleteLine(this)'></td>";
   body += "</tr>";
 
   return body;
@@ -43,12 +44,13 @@ function Deleterow(obj) {
 }
 
 function Insertrow(obj) {
+  var urlPrefix = window.MRDOC_URL_PREFIX || '';
   var ti = $(obj).parent().prevAll().length;
   var table_id = "#" + $(obj).attr("name");
   var name=$(obj).attr("name");
   var width = $(table_id).width();
   var td1 = "<td><div contenteditable='true' ></div></td>"
-  var td = "<td><div contenteditable='true' style='float: left;width: 70%'>列名</div><img src='/static/mrdoc-editor/delete.gif'  name='" + name + "' style='cursor: pointer' onclick='Deleterow(this)'></td>"
+  var td = "<td><div contenteditable='true' style='float: left;width: 70%'>列名</div><img src='" + urlPrefix + "/static/mrdoc-editor/delete.gif'  name='" + name + "' style='cursor: pointer' onclick='Deleterow(this)'></td>"
   for (var i = 0; i < $(table_id).find("tr").length; i++) {
       if (i == 0) {
           $(table_id).find("tr").eq(i).find("td").eq(ti).before(td);
@@ -74,6 +76,7 @@ function addbutton() {
 }
 
 function addtable(btn) {
+  var urlPrefix = window.MRDOC_URL_PREFIX || '';
   $("#TableGroup").empty();
   var row = $("#row").val();
   var col = $("#col").val();
@@ -84,7 +87,7 @@ function addtable(btn) {
       if (i == 0) {
           body += "<td>序号</td>"
       } else {
-          body += "<td><div contenteditable='true' style='float: left;width: 70%'>列名</div><img src='/static/mrdoc-editor/delete.gif' name='" + name + "' style='cursor: pointer' onclick='Deleterow(this)'></td>";
+          body += "<td><div contenteditable='true' style='float: left;width: 70%'>列名</div><img src='" + urlPrefix + "/static/mrdoc-editor/delete.gif' name='" + name + "' style='cursor: pointer' onclick='Deleterow(this)'></td>";
 
       }
   }
@@ -118,13 +121,14 @@ function changetable(obj) {
 }
 
 function addsrc(id, name) {
+  var urlPrefix = window.MRDOC_URL_PREFIX || '';
   for (var i = 0; i < $(id).find("tr").length; i++) {
       if (i == 0) {
-          var td = "<td class='small'><img src='/static/mrdoc-editor/add.gif' name='" + name + "' style='cursor: pointer' onclick='Insertrow(this)'></td>";
+          var td = "<td class='small'><img src='" + urlPrefix + "/static/mrdoc-editor/add.gif' name='" + name + "' style='cursor: pointer' onclick='Insertrow(this)'></td>";
           $(id).find("tr").eq(i).append(td);
       } else {
-          var td = "<td><img src='/static/mrdoc-editor/add.gif' name='" + name + "' style='cursor: pointer' onclick='InsertLine(this)'>" +
-              "<img src='/static/mrdoc-editor/delete.gif' name='" + name + "' style='cursor: pointer' onclick='DeleteLine(this)'></td>";
+          var td = "<td><img src='" + urlPrefix + "/static/mrdoc-editor/add.gif' name='" + name + "' style='cursor: pointer' onclick='InsertLine(this)'>" +
+              "<img src='" + urlPrefix + "/static/mrdoc-editor/delete.gif' name='" + name + "' style='cursor: pointer' onclick='DeleteLine(this)'></td>";
           $(id).find("tr").eq(i).append(td);
       }
 
@@ -470,7 +474,7 @@ insertMultimedia = function(e){
 var upload = layui.upload;
 upload.render({
     elem: '#upload_img',
-    url: '/upload_doc_img/',
+    url: (window.MRDOC_URL_PREFIX || '') + '/upload_doc_img/',
     before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
         layer.load(1); //上传loading
     },
@@ -503,7 +507,7 @@ upload.render({
 var upload_attach = layui.upload;
 upload_attach.render({
     elem: '#upload_attachment',
-    url: '/manage_attachment/',
+    url: (window.MRDOC_URL_PREFIX || '') + '/manage_attachment/',
     data:{types:0},
     before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
         layer.load(1); //上传loading
@@ -535,7 +539,7 @@ upload_attach.render({
 var upload_docx_doc = layui.upload;
 upload_docx_doc.render({
     elem:"#import-doc-docx",
-    url:"/import/doc_docx/",
+    url: (window.MRDOC_URL_PREFIX || '') + "/import/doc_docx/",
     data:{'type':'docx','editor_mode':editor_mode},
     before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
         layer.load(1); //上传loading

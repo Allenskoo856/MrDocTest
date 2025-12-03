@@ -28,6 +28,7 @@
 <script src="{% static 'jquery/3.5.0/jquery.min.js' %}"></script>
 <script src="{% static 'layui/layui.js' %}"></script>
 <script>
+    var URL_PREFIX = '{{ url_prefix }}';
     $.ajaxSetup({
         data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
     });
@@ -135,7 +136,7 @@
                                 title:"完成Markdown文集导入",
                                 btn:['好的','查看文集'],
                                 btn2:function(){
-                                    window.open('/project-'+sort_data['pid']+'/')
+                                    window.open(URL_PREFIX + '/project-'+sort_data['pid']+'/')
                                 }
                             })
                         }else{

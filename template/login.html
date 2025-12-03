@@ -63,7 +63,7 @@
                 {% csrf_token %}
                 <div class="layui-form-item">
                     <img src="{% static 'mrdoc_logo_ridus.png' %}" style="width: 60px;height: 60px;margin-bottom: 10px;" />
-                    <h3><strong>{% trans "登录" %} - <a href="/">{% if site_name != None %}{{site_name}} {% else %}{% trans "觅思文档" %}{% endif %}</a></strong></h3>
+                    <h3><strong>{% trans "登录" %} - <a href="{{ url_prefix }}/">{% if site_name != None %}{{site_name}} {% else %}{% trans "觅思文档" %}{% endif %}</a></strong></h3>
                 </div>
                 <span style='color:red;margin-bottom: 10px;'>{{ errormsg }}</span>
                 <div class="layui-form-item">

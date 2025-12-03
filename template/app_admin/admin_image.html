@@ -93,6 +93,7 @@
 
 <script src="{% static 'viewerjs/viewer.min.js' %}"></script>
 <script>
+    var URL_PREFIX = '{{ url_prefix }}';
     layui.use(['table','jquery','form','layer','element','table'], function() {
         let table = layui.table;
         let form = layui.form;
@@ -186,7 +187,7 @@
                 btnAlign:'c', //按钮居中
                 yes:function (index,layero) {
                     $.ajax({
-                        url:'/admin/api/img/'+id + '/',
+                        url: URL_PREFIX + '/admin/api/img/'+id + '/',,
                         type:'delete',
                         success:function(r){
                             layer.closeAll()

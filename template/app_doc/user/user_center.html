@@ -182,7 +182,7 @@
 					headers: {"X-CSRFToken":'{{ csrf_token }}'},
 					success:function(r){
 						if(r.status){
-							window.location.href = '/'
+							window.location.href = '{{ url_prefix }}/'
 						}else{
 							layer.msg("注销失败")
 						}

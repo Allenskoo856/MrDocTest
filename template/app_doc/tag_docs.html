@@ -34,6 +34,7 @@
 <script src="{% static 'toc/doctoc.js' %}"></script>
 <script src="{% static 'viewerjs/viewer.js' %}"></script>
 <script>
+    var URL_PREFIX = '{{ url_prefix }}';
     var layer = layui.layer;
     // 手机屏幕上默认最小化目录
     if(window.outerWidth < 1300){
@@ -135,10 +136,10 @@
         console.log(params)
         if (params.dataType == 'node') {
             if (params.name != "{{tag.name}}") {
-                window.location = "/tag_docs/" + params.data.id +'/';
+                window.location = URL_PREFIX + "/tag_docs/" + params.data.id +'/';
             }
         }else if(params.dataType == 'edge'){
-            window.open("/project-"+params.data.pid+'/doc-'+params.data.id+'/', '_blank')
+            window.open(URL_PREFIX + "/project-"+params.data.pid+'/doc-'+params.data.id+'/', '_blank')
         }
     });
 

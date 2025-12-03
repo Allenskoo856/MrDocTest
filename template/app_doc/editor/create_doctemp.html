@@ -84,7 +84,7 @@
                     window.localStorage.removeItem('mrdoc_doc_cache') // 清空文档缓存
                     layer.msg('保存成功',function(){
                         md_changed = false;
-                        window.location.href = '/modify_doctemp/' + r.data + '/';
+                        window.location.href = '{{ url_prefix }}/modify_doctemp/' + r.data + '/';
                     });
                 }else{
                     //创建失败
