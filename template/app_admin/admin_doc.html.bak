@@ -66,11 +66,11 @@
     {% verbatim %}
         {{#if (d.status == 1) { }}
             <span class="layui-badge-dot layui-bg-blue"></span>{% endverbatim %}
-            <a href="{{ url_prefix }}/project-{{d.project_id}}{% endverbatim %}/doc-{% verbatim %}{{d.id}}{% endverbatim %}" target="_blank">{% verbatim %}{{=d.name}}</a>{% verbatim %}
+            <a href="{{ url_prefix }}/project-{% verbatim %}{{d.project_id}}{% endverbatim %}/doc-{% verbatim %}{{d.id}}{% endverbatim %}" target="_blank">{% verbatim %}{{=d.name}}{% endverbatim %}</a>{% verbatim %}
         {{# }else if(d.status == 0){ }}
             <!-- <i class="layui-icon layui-icon-release" style="cursor: pointer;" onclick="fastPubDoc('{{d.id}}')" title="草稿状态，点击一键发布"></i>&nbsp; -->
             <span class="layui-badge-dot layui-bg-orange"></span>{% endverbatim %}
-            <a href="{{ url_prefix }}/modify_doc/{{d.id}}{% endverbatim %}/" target="_blank" title="修改文档：{% verbatim %}{{=d.name}}{% endverbatim %}">{% verbatim %}{{=d.name}} </a>{% verbatim %}
+            <a href="{{ url_prefix }}/modify_doc/{% verbatim %}{{d.id}}{% endverbatim %}/" target="_blank" title="修改文档：{% verbatim %}{{=d.name}}{% endverbatim %}">{% verbatim %}{{=d.name}}{% endverbatim %} </a>{% verbatim %}
         {{# } }}
         {{#if (d.editor_mode in [1,2,3]) { }}
             <i class="layui-icon layui-icon-form" title="普通文档"></i>
