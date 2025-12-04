@@ -69,7 +69,7 @@
 
 <!-- 协作人数 -->
 <script type="text/html" id="colla-cnt">
-    <span>{{d.colla_total}}{% endverbatim %}</span> <a href="{{ url_prefix }}/admin/project_colla_config/{% verbatim %}{{d.id}}/"  title="管理文集协作"><i class="layui-icon layui-icon-set"></i></a>
+    {% verbatim %}<span>{{d.colla_total}}</span>{% endverbatim %} <a href="{{ url_prefix }}/admin/project_colla_config/{% verbatim %}{{d.id}}{% endverbatim %}/"  title="管理文集协作"><i class="layui-icon layui-icon-set"></i></a>
 </script>
 
 <!-- 创建时间 -->

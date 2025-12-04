@@ -78,10 +78,14 @@
     {% verbatim %}
         {{#if (d.status == 1) { }}
             <span class="layui-badge-dot layui-bg-blue"></span>
+    {% endverbatim %}
             <a href="{{ url_prefix }}/project-{% verbatim %}{{d.project_id}}{% endverbatim %}/doc-{% verbatim %}{{d.id}}{% endverbatim %}" target="_blank">{% verbatim %}{{=d.name}}{% endverbatim %}</a>
+    {% verbatim %}
         {{# }else if(d.status == 0){ }}
             <span class="layui-badge-dot layui-bg-orange"></span>
+    {% endverbatim %}
             <a href="{{ url_prefix }}/modify_doc/{% verbatim %}{{d.id}}{% endverbatim %}/" target="_blank" title="修改文档：{% verbatim %}{{=d.name}}{% endverbatim %}">{% verbatim %}{{=d.name}}{% endverbatim %} </a>
+    {% verbatim %}
         {{# } }}
         {{#if (d.editor_mode in [1,2,3]) { }}
             <i class="layui-icon layui-icon-form" title="普通文档"></i>
@@ -137,11 +141,9 @@
 
 <!-- 单个文档操作 -->
 <script type="text/html" id="doc-bar">
-    {% verbatim %}
     <a href="{{ url_prefix }}/manage_doc_history/{% verbatim %}{{d.id}}{% endverbatim %}/" class="pear-btn pear-btn-sm"><i class="layui-icon layui-icon-log"></i></a>
     <a href="{{ url_prefix }}/modify_doc/{% verbatim %}{{d.id}}{% endverbatim %}/" title="修改文档" class="pear-btn pear-btn-sm" target="_blank"><i class="layui-icon layui-icon-edit"></i></a>
     <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
-    {% endverbatim %}
 </script>
 
 {% endblock %}

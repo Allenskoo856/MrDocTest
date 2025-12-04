@@ -31,8 +31,8 @@
 
 <!-- 文集名称 -->
 <script type="text/html" id="project-name">
-    {% verbatim %}
     <a href="{{ url_prefix }}/project-{% verbatim %}{{d.id}}{% endverbatim %}/" target="_blank">
+        {% verbatim %}
         {{d.name}}
         {{#if (d.role == 0) { }}
         {{# }else if(d.role == 1){ }}
@@ -42,17 +42,15 @@
         {{# }else if(d.role == 3){ }}
         <span  tooltip="访问码" placement="right"><i class="layui-icon layui-icon-key"></i></span>
         {{# } }}
+        {% endverbatim %}
     </a>
-    {% endverbatim %}
 </script>
 
 <!-- 单个文集操作 -->
 <script type="text/html" id="project-bar">
-    {% verbatim %}
     <a href="{{ url_prefix }}/manage_pro_doc_sort/{% verbatim %}{{d.id}}{% endverbatim %}/" title="排序文档" class="pear-btn pear-btn-sm" lay-event="sort"><i class="layui-icon layui-icon-cols"></i></a>
     <a href="{{ url_prefix }}/modify_pro/?pro_id={% verbatim %}{{d.id}}{% endverbatim %}" title="修改文集配置" class="pear-btn pear-btn-sm"><i class="layui-icon layui-icon-set"></i></a>
     <button class="pear-btn pear-btn-danger pear-btn-sm" title="删除文集" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
-    {% endverbatim %}
 </script>
 
 <!-- 文集权限 -->
@@ -72,9 +70,7 @@
 
 <!-- 协作人数 -->
 <script type="text/html" id="colla-cnt">
-    {% verbatim %}
     <span>{% verbatim %}{{d.colla_total}}{% endverbatim %}</span> <a href="{{ url_prefix }}/manage_project_colla/{% verbatim %}{{d.id}}{% endverbatim %}/"  title="管理文集协作"><i class="layui-icon layui-icon-set"></i></a>
-    {% endverbatim %}
 </script>
 
 <!-- 创建时间 -->
