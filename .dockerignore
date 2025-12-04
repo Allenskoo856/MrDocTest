@@ -42,10 +42,11 @@ node_modules
 npm-debug.log
 yarn-error.log
 
-# 数据库文件
+# 数据库文件（排除数据库，但保留配置文件）
 *.db
 *.sqlite3
 db.sqlite3
+config/db.sqlite3
 
 # 媒体和静态文件（运行时生成）
 media/
@@ -54,6 +55,9 @@ media/
 # 日志文件
 *.log
 log/
+
+# 本地测试数据库
+mrdoc_test.db
 
 # 临时文件
 *.tmp

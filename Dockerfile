@@ -52,6 +52,9 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 COPY . /app/MrDoc/
 WORKDIR /app/MrDoc
 
+# 创建必要的目录
+RUN mkdir -p /app/MrDoc/config /app/MrDoc/log /app/MrDoc/media /app/MrDoc/static
+
 # 启动脚本权限
 RUN chmod +x docker_mrdoc.sh
 
