@@ -1572,20 +1572,24 @@ def admin_site_config(request):
         logger.exception("更新站点设置出错")
         return JsonResponse({'code':2,'data':'更新出错'})
 
-# 检测版本更新
+# 检测版本更新（已禁用网络请求，内网部署专用）
 def check_update(request):
-    gitee_url = 'https://gitee.com/api/v5/repos/zmister/MrDoc/tags'
-    github_url = 'https://api.github.com/repos/zmister2016/MrDoc/tags'
-    gitee_resp = requests.get(gitee_url,timeout=5)
-    if gitee_resp.status_code == 200:
-        # gitee上查找版本取结果数组中最后一个对象为最新版本
-        return JsonResponse({'status':True,'data':gitee_resp.json()[-1]})
-    else:
-        github_resp = requests.get(github_url,timeout=5)
-        if github_resp.status_code == 200:
-            return JsonResponse({'status':True,'data':github_resp.json()[0]})
-        else:
-            return JsonResponse({'status':True,'data':{'name': 'v0.0.1'}})
+    # 内网部署模式：不进行网络请求，直接返回当前版本
+    # gitee_url = 'https://gitee.com/api/v5/repos/zmister/MrDoc/tags'
+    # github_url = 'https://api.github.com/repos/zmister2016/MrDoc/tags'
+    # gitee_resp = requests.get(gitee_url,timeout=5)
+    # if gitee_resp.status_code == 200:
+    #     # gitee上查找版本取结果数组中最后一个对象为最新版本
+    #     return JsonResponse({'status':True,'data':gitee_resp.json()[-1]})
+    # else:
+    #     github_resp = requests.get(github_url,timeout=5)
+    #     if github_resp.status_code == 200:
+    #         return JsonResponse({'status':True,'data':github_resp.json()[0]})
+    #     else:
+    #         return JsonResponse({'status':True,'data':{'name': 'v0.0.1'}})
+    
+    # 内网模式：返回固定版本信息
+    return JsonResponse({'status':True,'data':{'name': 'v0.9.6'}})
 
 # 站点数据备份
 @superuser_only
